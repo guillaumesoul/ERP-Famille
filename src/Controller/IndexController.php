@@ -11,9 +11,15 @@ final class IndexController extends AbstractController
     /**
      * @Route("/{vueRouting}", requirements={"vueRouting"="^(?!api|_(profiler|wdt)).*"}, name="index")
      * @return Response
+     * @throws JsonException
      */
     public function indexAction(): Response
     {
-        return $this->render('base.html.twig', []);
+        /** @var User $user */
+        $user = $this->getUser();
+        return $this->render('base.html.twig', [
+            'isAuthenticated' => json_encode(!empty($user)),
+            'roles' => json_encode(!empty($user) ? $user->getRoles() : []),
+        ]);
     }
 }
